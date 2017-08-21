@@ -9,9 +9,10 @@ i have 2 crontab entries to run this code
 13 8  *   *   *     /usr/bin/python3 /home/pi/python_door_alert/GetSunset.py >> /home/pi/log/sunset.log
 */5 *  *   *   *     /usr/bin/python3 /home/pi/python_door_alert/Alert.py >> /home/pi/log/door.log
 ```
-**(``/home/pi/log directory`` must be created manually)**
+**( ``/home/pi/log`` directory must be created manually)**
 
 ``GetSunset.py`` uses a web service provided by https://sunrise-sunset.org and is is run once per day to determine when sunset occurs
 
 ``Alert.py`` runs every 5 minutes and logs whether the door is open or closed. if it is after sunset an alert is sent to the address configured in ``properties.py`` telling me to close the door.
 
+**( [MetaARPA account at SDF](http://sdf.org/?join#meta) with manually configured passphraseless SSH trust necessary for sending email with the same method i use)
