@@ -52,6 +52,6 @@ if ( time.gmtime() >= sunset_ts):
   if ( input_state and door_state == 'open'):
     #print ("send a serious alert")
     command='echo \'close it!!\'|mail -s \'door open\' {}'
-    print("command is ={}=".format(command.format(properties.address)))
+    #print("command is ={}=".format(command.format(properties.address)))
     ret = subprocess.call(['ssh', 'ma.sdf.org', command.format(properties.address)])
 
