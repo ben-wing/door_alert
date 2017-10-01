@@ -24,6 +24,7 @@ GPIO.cleanup()
 ############################################# 
 
 def get_last_line(file_handle): 
+  # cycle to the last line of the file because it used to use the .log file rather than a single line file just for .today
   #why pass?? -> https://stackoverflow.com/a/3346492
   for line in file_handle:
     pass
@@ -32,7 +33,7 @@ def get_last_line(file_handle):
   return last
 ####
 
-sunset_file='/home/pi/log/sunset.log'
+sunset_file='/home/pi/log/sunset.today'
 f = open(sunset_file, "r")
 sunset_str = get_last_line(f)
 #print (sunset_str)
@@ -42,6 +43,7 @@ door_file='/home/pi/log/door.log'
 #debug always later than sunset true
 #if ( True ):
 if ( time.gmtime() >= sunset_ts):
+  #print ("gmtime ={}=, is after or equal to sunset_ts ={}=".format(time.gmtime(), sunset_ts))
   f=open(door_file, "r")
   last_door_state = get_last_line(f)
   #print ("last door ={}\n".format(last_door_state))
