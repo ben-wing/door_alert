@@ -12,15 +12,10 @@ formatted_ts=time.strftime('%Y-%m-%dT%H:%M:%S')
 
 input_state = GPIO.input(18)
 
-if input_state == False:
-  print( '{}--door closed'.format(formatted_ts))
-else: 
-  print( '{}--door open'.format(formatted_ts))
-
 GPIO.cleanup()
 
 ############################################# 
-### now that i have current state, sen an alert
+### now that i have current state, send an alert
 ############################################# 
 
 def get_last_line(file_handle): 
@@ -40,14 +35,20 @@ sunset_str = get_last_line(f)
 sunset_ts = time.strptime(sunset_str, '%Y-%m-%dT%H:%M:%S%z')
 
 door_file='/home/pi/log/door.log'
+#increase scope of door_state, to include it in logging
+door_state='closed'
 #debug always later than sunset true
 #if ( True ):
 if ( time.gmtime() >= sunset_ts):
-  #print ("gmtime ={}=, is after or equal to sunset_ts ={}=".format(time.gmtime(), sunset_ts))
+  #print ("gmtime \n={}=\n is after or equal to sunset_ts \n={}=".format(time.gmtime(), sunset_ts))
   f=open(door_file, "r")
   last_door_state = get_last_line(f)
   #print ("last door ={}\n".format(last_door_state))
   (junk, door_state) = last_door_state.split("door ")
+  # if else handling based on https://stackoverflow.com/a/12887408/1074093
+  (door_state, junk) = door_state.split(",") if \
+                       "," in door_state else \
+                       (door_state, "")
   
   #print ("door state ={}=".format(door_state))
   #print ("input_state={}=".format(input_state))
@@ -55,5 +56,14 @@ if ( time.gmtime() >= sunset_ts):
     #print ("send a serious alert")
     command='echo \'close it!!\'|mail -s \'door open\' {}'
     #print("command is ={}=".format(command.format(properties.address)))
+    #TODO: try out using mailgun
     ret = subprocess.call(['ssh', 'ma.sdf.org', command.format(properties.address)])
+
+if input_state == False:
+  print( '{}--door closed'.format(formatted_ts))
+else: 
+  if door_state == 'open':
+    print( '{}--door open,alerted'.format(formatted_ts))
+  else: 
+    print( '{}--door open'.format(formatted_ts))
 
