@@ -54,7 +54,7 @@ if ( time.gmtime() >= sunset_ts):
   #print ("input_state={}=".format(input_state))
   if ( input_state and door_state == 'open'):
     #print ("send a serious alert")
-    command='echo \'close it!!\'|mail -s \'door open\' {}'
+    command='echo \'close it!!\'|mail -s \'door open\' {} >> logs/door_mail.log'
     #print("command is ={}=".format(command.format(properties.address)))
     #TODO: try out using mailgun
     ret = subprocess.call(['ssh', 'ma.sdf.org', command.format(properties.address)])
